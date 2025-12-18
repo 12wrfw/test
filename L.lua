@@ -1554,6 +1554,10 @@ do
 
         Toggles[Idx] = Toggle;
 
+        if type(Info.callback) == 'function' then
+            Toggle:OnChanged(Info.callback);
+        end;
+
         return Toggle;
     end;
 
