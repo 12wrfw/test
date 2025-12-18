@@ -2160,6 +2160,10 @@ do
 
         Options[Idx] = Dropdown;
 
+        if type(Info.callback) == 'function' then
+            Dropdown:OnChanged(Info.callback);
+        end;
+
         return Dropdown;
     end;
 
