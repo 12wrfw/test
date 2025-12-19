@@ -1715,6 +1715,10 @@ do
             end;
         end;
 
+        if Info.callback then
+            Slider:OnChanged(Info.callback);
+        end;
+
         SliderInner.InputBegan:Connect(function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
                 local mPos = Mouse.X;
