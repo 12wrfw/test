@@ -407,6 +407,11 @@ local SaveManager = {} do
 		self:UpdateAutoloadLabel()
 
 		self:SetIgnoreIndexes({ 'SaveManager_ConfigList', 'SaveManager_ConfigName' })
+
+		task.spawn(function()
+			task.wait(0.1)
+			self:LoadAutoloadConfig()
+		end)
 	end
 
 	SaveManager:BuildFolderTree()
