@@ -244,7 +244,12 @@ local SaveManager = {} do
 		end
 
 		local name = readfile(autoloadFile)
-		if not name or name:gsub(' ', '') == '' then
+		if not name then
+			return false, 'autoload config name is empty'
+		end
+
+		name = name:gsub('^%s+', ''):gsub('%s+$', ''):gsub('\r', ''):gsub('\n', '')
+		if name == '' then
 			return false, 'autoload config name is empty'
 		end
 
@@ -269,9 +274,12 @@ local SaveManager = {} do
 		local autoloadFile = self.Folder .. '/settings/autoload.txt'
 		if isfile(autoloadFile) then
 			local name = readfile(autoloadFile)
-			if name and name:gsub(' ', '') ~= '' then
-				self.AutoloadLabel:SetText('Current autoload config: ' .. name)
-				return
+			if name then
+				name = name:gsub('^%s+', ''):gsub('%s+$', ''):gsub('\r', ''):gsub('\n', '')
+				if name ~= '' then
+					self.AutoloadLabel:SetText('Current autoload config: ' .. name)
+					return
+				end
 			end
 		end
 		self.AutoloadLabel:SetText('Current autoload config: none')
