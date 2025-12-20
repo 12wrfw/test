@@ -3,6 +3,7 @@ local httpService = game:GetService('HttpService')
 local SaveManager = {} do
 	SaveManager.Folder = 'LinoriaLibSettings'
 	SaveManager.Ignore = {}
+	SaveManager.CustomData = {}
 	SaveManager.Parser = {
 		Toggle = {
 			Save = function(idx, object) 
@@ -79,6 +80,10 @@ local SaveManager = {} do
 		end
 	end
 
+	function SaveManager:SetCustomData(key, value)
+		self.CustomData[key] = value
+	end
+
 	function SaveManager:SetFolder(folder)
 		self.Folder = folder;
 		self:BuildFolderTree()
@@ -111,7 +116,8 @@ local SaveManager = {} do
 		local fullPath = self.Folder .. '/settings/' .. name .. '.json'
 
 		local data = {
-			objects = {}
+			objects = {},
+			custom = SaveManager.CustomData
 		}
 
 		Toggles = Toggles or {}
@@ -170,6 +176,10 @@ local SaveManager = {} do
 
 		Options = Options or {}
 		Toggles = Toggles or {}
+
+		if decoded.custom and type(decoded.custom) == 'table' then
+			SaveManager.CustomData = decoded.custom
+		end
 
 		local islandSelectionValue = nil
 		for _, option in next, decoded.objects do
