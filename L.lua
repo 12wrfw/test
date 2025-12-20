@@ -2343,8 +2343,16 @@ end
 
 function Library:Notify(Text, Time)
     local XSize, YSize = Library:GetTextBounds(Text, Enum.Font.Code, 14);
-
-    YSize = YSize + 7
+    
+    local maxWidth = 400
+    local originalXSize = XSize
+    if XSize > maxWidth then
+        XSize = maxWidth
+        local estimatedLines = math.ceil(originalXSize / maxWidth)
+        YSize = (YSize * estimatedLines) + 7
+    else
+        YSize = YSize + 7
+    end
 
     local NotifyOuter = Library:Create('Frame', {
         BorderColor3 = Color3.new(0, 0, 0);
@@ -2402,7 +2410,9 @@ function Library:Notify(Text, Time)
         Text = Text;
         RichText = true;
         TextXAlignment = Enum.TextXAlignment.Left;
+        TextYAlignment = Enum.TextYAlignment.Top;
         TextSize = 14;
+        TextWrapped = true;
         ZIndex = 103;
         Parent = InnerFrame;
     });
@@ -2420,7 +2430,8 @@ function Library:Notify(Text, Time)
         BackgroundColor3 = 'AccentColor';
     }, true);
 
-    pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, XSize + 8 + 4, 0, YSize), 'Out', 'Quad', 0.4, true);
+    local finalWidth = math.min(XSize + 8 + 4, maxWidth + 8 + 4)
+    pcall(NotifyOuter.TweenSize, NotifyOuter, UDim2.new(0, finalWidth, 0, YSize), 'Out', 'Quad', 0.4, true);
 
     task.spawn(function()
         wait(Time or 5);
